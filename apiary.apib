@@ -1,0 +1,152 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+
+# Train
+
+Train APIs
+
+## BattleMenu [/battle/{user_id}]
+バトル選択
+### Get BattleList [GET]
+バトル選択に必要な情報を送信する
++ Attribute
+    + money: 4800(number) - 所持金
+    + chars - 取得キャラ情報(array)
+    + chars/a_char_id: 1(number) - キャラのA_id
+    + chars/char_id: 2(number) - キャラid
+    + chars/name: 丑(string) - キャラ名
+    + chars/attack: 25(number) - 攻撃力
+    + chars/endurance: 45(number) - 耐久力
+    + chars/agility: 30(number) - 敏捷性
+    + chars/debuf: 15(number) - 削減能力
+    + stages - ステージ情報(配列)
+    + stages/stage_id: 1(number) - ステージID
+    + stages/title: 初級(string) - ステージ名
+    + stages/entry_fee: 100(number) - 参加費
+    + stages/prize: 200(number) - 賞金
+    + stages/item_name: "初級卒業"(string) - 獲得称号
+    + stages/clearcount: 3(number) - クリア回数
+    
++ Response 200(application/json)
+
+        {
+            "money": 4800,
+            "chars": [
+                {
+                    "a_char_id": 1,
+                    "char_id": 2,
+                    "name": "丑",
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+                }
+            ]
+            "stages": [
+                {
+                    "stage_id": 3,
+                    "title": "初級",
+                    "entry_fee": 100,
+                    "prize": 200,
+                    "item_name": "初級者卒業",
+                    "clearcount": 2
+                }
+            ]
+        }
+        
+### Join Battle [POST]
+バトルを選択した
++ Attribute
+    + battle_id: 2(number) - バトルの識別ID
+    
++ Request (application/json)
+    
+    + Attribute
+        + stage_id: 1(number) - ステージID
+
++ Response 201 (application/json)
+        
+    + Attribute
+        + battle_id: 2(number) - バトルID
+
+## BattleMain [/battle/{user_id}/{battle_id}]
+クエスト中のバトルと共通
+
+### Setting Battle [GET]
+バトルの情報を取得する
++ Response 200 (application/json)
+
+        {
+            "category": "quest",
+            "chars": [
+            {
+                "a_char_id": 1,
+                "char_id": 2,
+                "name": "丑",
+                "attack": 25,
+                "endurance": 45,
+                "agility": 30,
+                "debuf": 15
+            }
+            ],
+            "enemy": [
+            {
+                "a_enemy_id": 4,
+                "char_id": 7,
+                "name": "馬",
+                "attack": 30,
+                "endurance": 30,
+                "agility": 40,
+                "debuf": 15
+            }
+            ]
+        }
+
+## Gacha [/gacha/{user_id}]
+
+### Check Gacha [GET]
+ガチャの情報を取得
++ Attribute
+    + availability: true(boolean) - ガチャが実行可能かどうか
+    + rest_char: 4(number) - 残りキャラ数
+    + gacha_cost: 1000(number) - ガチャ実行コスト
+    + money: 4800(number) - 所持金
+
++ Response 200 (application/json)
+
+        {
+            "availability": true,
+            "rest_char": 4,
+            "gacha_cost": 1000,
+            "money": 4800
+        }
+
+### Draw Gacha [POST]
+ガチャを引く
+
++ Response 201 (application/json)
+
+    + Attribute (Chars)
+        
+## Menu [/menu]
+
+
+
+## Order [/order]
+
+## Quest [/quest]
+
+## Data Structure
+
+### Chars (object)
++ char(array[Character]) - キャラ情報
+
+### Character (object)
++ a_char_id: 1(number) - キャラのA_id
++ char_id: 2(number) - キャラid
++ name: 丑(string) - キャラ名
++ attack: 25(number) - 攻撃力
++ endurance: 45(number) - 耐久力
++ agility: 30(number) - 敏捷性
++ debuf: 15(number) - 削減能力
