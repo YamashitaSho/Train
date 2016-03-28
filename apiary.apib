@@ -8,17 +8,16 @@ Train APIs
 
 # Group Battle
 バトル画面(クエスト、ステージ制で共通)
-バトルIDが発行された時点で
-## Main [/battle/{user_id}/{battle_id}]
+IDが発行された時点で結果はDBに保存されている
+## Main [/v1/battle/{battle_id}]
 
-
-### Setting Battle [GET]
+### Setting Battle [POST]
 + Attributes
     + category: quest(string) - quest or stage
     + chars: _(array) - 参戦する自キャラの情報
     + enemy: _(array) - 参戦する敵キャラの情報
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
         {
             "category": "quest",
@@ -49,7 +48,12 @@ Train APIs
             ]
         }
 
-## Result [/battle/result/{user_id}/{battle_id}]
+### Turn Over [GET]
++ Attributes
+
++ Response 200 (application/json)
+
+## Result [/v1/battle/result/{battle_id}]
 結果表示画面
 
 ### Result[GET]
@@ -94,7 +98,7 @@ Train APIs
         }        
         
 # Group Gacha
-## Gacha [/gacha/{user_id}]
+## Gacha [/v1/gacha/]
 ガチャ画面
 ### Check Gacha [GET]
 + Attribute
@@ -136,7 +140,7 @@ Train APIs
         }
 
 # Group Menu
-## Menu [/menu/{userid}]
+## Menu [/v1/menu/]
 
 ### Get Status [GET]
 + Attributes
@@ -158,7 +162,7 @@ Train APIs
 
 
 # Group Order
-## Order [/order/{user_id}]
+## Order [/v1/order/{type}]
 ### Get Order [GET]
 + Attributes
     + party: _(array) - 現在のパーティキャラ及び装備
@@ -199,14 +203,12 @@ Train APIs
         }
 ### Change Order [PUT]
 + Attributes
-    + id_type: item(string) - 変更するものの種別(item or char)
     + slot: 3(number) - 変更するスロット
     + id: 6(number) - 変更後のキャラクター
 
 + Request (application/json)
 
         {
-            "id_type": "item",
             "slot": 3,
             "new_id": 6
         }
@@ -247,7 +249,7 @@ Train APIs
         }
 
 # Group Quest
-## Quest [/quest/{user_id}]
+## Quest [/v1/quest/]
 クエストバトル発行API
 quest属性のbattleidを作成する
 ### Join: Quest Battle [POST]
@@ -263,7 +265,7 @@ quest属性のbattleidを作成する
 
 
 # Group Stage
-## StageMenu [/stage/{user_id}]
+## StageMenu [/v1/stage/]
 バトル選択画面
 stage属性のbattleidを作成する
 ### Get BattleList [GET]
@@ -312,7 +314,7 @@ stage属性のbattleidを作成する
             ]
         }
         
-### Join: Stage Battle [POST]
+### Join Battle [POST]
 + Attribute
     + battle_id: 2(number) - バトルの識別ID
     
@@ -325,25 +327,3 @@ stage属性のbattleidを作成する
         
     + Attribute
         + battle_id: 2(number) - バトルID
-
-        
-
-# Data Structures
-## Data Structure
-
-### Char (object)
-+ char(Character) - キャラ情報
-
-### Chars (object)
-+ char(array[Character]) - キャラ情報(配列)
-
-### Character (object)
-+ a_char_id: 1(number) - キャラのA_id
-+ char_id: 2(number) - キャラid
-+ name: 丑(string) - キャラ名
-+ attack: 25(number) - 攻撃力
-+ endurance: 45(number) - 耐久力
-+ agility: 30(number) - 敏捷性
-+ debuf: 15(number) - 削減能力
-+ exp: 50(number) - 経験値
-+ level: 4(number) - 能力上昇回数
