@@ -7,11 +7,12 @@ HOST: http://polls.apiblueprint.org/
 Train APIs
 
 # Group Battle
-バトル画面(クエスト、ステージ制で共通)
-IDが発行された時点で結果はDBに保存されている
+バトル画面(クエスト、ステージ制で共通)<br>
+SetBattle呼び出し時にバトル処理を行い、ステータスに反映する<br>
+ID発行済→setbattle→ステータス反映済み→result→戦闘終了済み
 ## Main [/v1/battle/{battle_id}]
 
-### Setting Battle [POST]
+### SetBattle [PUT]
 + Attributes
     + category: quest(string) - quest or stage
     + chars: _(array) - 参戦する自キャラの情報
@@ -26,10 +27,12 @@ IDが発行された時点で結果はDBに保存されている
                 "a_char_id": 1,
                 "char_id": 2,
                 "name": "丑",
-                "attack": 25,
-                "endurance": 45,
-                "agility": 30,
-                "debuf": 15
+                "status": {
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+                },
                 "exp": 50,
                 "level": 4
             }
@@ -39,31 +42,33 @@ IDが発行された時点で結果はDBに保存されている
                 "a_enemy_id": 4,
                 "char_id": 7,
                 "name": "馬",
-                "attack": 30,
-                "endurance": 30,
-                "agility": 40,
-                "debuf": 15
+                "status": {
+                    "attack": 30,
+                    "endurance": 30,
+                    "agility": 40,
+                    "debuf": 15
+                },
                 "level": 4
             }
             ]
         }
 
-### Turn Over [GET]
+### turnoverBattle [GET]
 + Attributes
 
 + Response 200 (application/json)
 
 ## Result [/v1/battle/result/{battle_id}]
-結果表示画面
+指定されたバトル結果を送信、該当バトルのステータスを終了済みに変更する
 
-### Result[GET]
+### Result[PUT]
 + Attributes
     + is_win: true(boolean) - 勝ち負け(勝-true 負-false)
     + getitem: クエスト一級(string) - 取得アイテム名
     + money: 3150(number) - 所持金額(すでに加算されている)
     + prize: 150(number) - 獲得金額
-    + chars: _(array) - キャラクターのステータス(上昇後)
-    + chars_up: _(array) - キャラクターのステータス上昇量
+    + chars: _(array) - キャラクターのステータス(上昇前)
+    + obtained: _(array) - キャラクターのステータス(上昇後)
 
 + Response 200 (application/json)
 
@@ -77,20 +82,23 @@ IDが発行された時点で結果はDBに保存されている
                 "a_char_id": 1,
                 "char_id": 2,
                 "name": "丑",
-                "attack": 25,
-                "endurance": 45,
-                "agility": 30,
-                "debuf": 15,
-                "exp": 50,
+                "status": {
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+                },
                 "level": 4
             }
             ],
             "chars_up"[
             {
-                "attack": 1,
-                "endurance": 2,
-                "agility": 0,
-                "debuf": 1,
+                "status": {
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+                },
                 "exp": 64,
                 "level": 1
             }
@@ -133,10 +141,12 @@ IDが発行された時点で結果はDBに保存されている
             "a_char_id": 1,
             "char_id": 2,
             "name": "丑",
-            "attack": 25,
-            "endurance": 45,
-            "agility": 30,
-            "debuf": 15
+            "status": {
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+            }
         }
 
 # Group Menu
@@ -186,25 +196,29 @@ IDが発行された時点で結果はDBに保存されている
                 "char_id": 2,
                 "name": "丑",
                 "is_equipped": true,
-                "attack": 25,
-                "endurance": 45,
-                "agility": 30,
-                "debuf": 15
+                "status": {
+                    "attack": 25,
+                    "endurance": 45,
+                    "agility": 30,
+                    "debuf": 15
+                }
             }],
             "items":[
             {
                 "item_id": 1,
                 "name": "初心者",
-                "attack": 0,
-                "endurance": 5,
-                "agility": 0,
-                "debuf": 0
+                "status": {
+                    "attack": 5,
+                    "endurance": 0,
+                    "agility": 0,
+                    "debuf": 0
+                }
             }],
         }
 ### Change Order [PUT]
 + Attributes
     + slot: 3(number) - 変更するスロット
-    + id: 6(number) - 変更後のキャラクター
+    + new_id: 6(number) - 変更後のキャラクター
 
 + Request (application/json)
 
@@ -214,39 +228,12 @@ IDが発行された時点で結果はDBに保存されている
         }
 
 + Response 201 (application/json)
-
+        
         {
-            "party":{
-                "a_char_id1": 1,
-                "a_char_id2": 2,
-                "a_char_id3": 3,
-                "item_id1": 1,
-                "item_id2": 2,
-                "item_id3": 6
-            },
-            "chars":[
-            {
-                "a_char_id": 1,
-                "char_id": 2,
-                "name": "丑",
-                "is_equipped": true,
-                "attack": 25,
-                "endurance": 45,
-                "agility": 30,
-                "debuf": 15
-                "exp": 50,
-                "level": 4
-            }],
-            "items":[
-            {
-                "item_id": 1,
-                "name": "初心者",
-                "attack": 0,
-                "endurance": 5,
-                "agility": 0,
-                "debuf": 0
-            }],
+            "slot": 3,
+            "new_id": 6
         }
+
 
 # Group Quest
 ## Quest [/v1/quest/]
@@ -296,10 +283,12 @@ stage属性のbattleidを作成する
                     "a_char_id": 1,
                     "char_id": 2,
                     "name": "丑",
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
+                    "status": {
+                        "attack": 25,
+                        "endurance": 45,
+                        "agility": 30,
+                        "debuf": 15
+                    }
                 }
             ],
             "stages": [
@@ -314,7 +303,7 @@ stage属性のbattleidを作成する
             ]
         }
         
-### Join Battle [POST]
+### Join Arena Battle [POST]
 + Attribute
     + battle_id: 2(number) - バトルの識別ID
     
