@@ -8,50 +8,56 @@ Train APIs
 
 # Group Battle
 バトル画面(クエスト、ステージ制で共通)<br>
-SetBattle呼び出し時にバトル処理を行い、ステータスに反映する<br>
-ID発行済→setbattle→ステータス反映済み→result→戦闘終了済み
+SetBattle呼び出し時にバトル処理を行う<br>
+ID発行済→setbattle→result→ステータス反映
 ## Main [/v1/battle/{battle_id}]
 
 ### SetBattle [PUT]
 + Attributes
-    + category: quest(string) - quest or stage
-    + chars: _(array) - 参戦する自キャラの情報
-    + enemy: _(array) - 参戦する敵キャラの情報
+    + type: quest(string) - quest or stage
+    + friend_position: a(array) - 参戦する自キャラの情報
+        + (object)
+            + exp: 55(number) - 経験値
+            + level: 2(number) - レベル
+            + status: a(object)
+                + endurance: 101(number) - たいりょく
+                + debuf: 101(number) - いあつ
+                + attack: 101(number) - こうげき
+                + agility: 101(number) - すばやさ
+    + enemy_position: _(array) - 参戦する敵キャラの情報
 
 + Response 201 (application/json)
 
         {
-            "category": "quest",
-            "chars": [
+          "friend_position": [
             {
-                "a_char_id": 1,
-                "char_id": 2,
-                "name": "丑",
-                "status": {
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
-                },
-                "exp": 50,
-                "level": 4
-            }
-            ],
-            "enemy": [
+              "exp": 55,
+              "level": 2,
+              "status": {
+                "endurance": 101,
+                "debuf": 101,
+                "attack": 101,
+                "agility": 101
+              },
+              "char_id": 9
+            },
             {
-                "a_enemy_id": 4,
-                "char_id": 7,
-                "name": "馬",
-                "status": {
-                    "attack": 30,
-                    "endurance": 30,
-                    "agility": 40,
-                    "debuf": 15
-                },
-                "level": 4
+              "exp": 55,
+              "level": 2,
+              "status": {
+                "endurance": 101,
+                "debuf": 101,
+                "attack": 101,
+                "agility": 101
+              },
+              "char_id": 7
             }
-            ]
+          ],
+          "battle_id": 8,
+          ],
+          "type": "quest"
         }
+
 
 ### turnoverBattle [GET]
 + Attributes
@@ -109,67 +115,41 @@ ID発行済→setbattle→ステータス反映済み→result→戦闘終了済
 ## Gacha [/v1/gacha/]
 ガチャ画面
 ### Check Gacha [GET]
-+ Attribute
-    + availability: true(boolean) - ガチャが実行可能かどうか
-    + rest_char: 4(number) - 残りキャラ数
-    + gacha_cost: 1000(number) - ガチャ実行コスト
-    + money: 4800(number) - 所持金
-
 + Response 200 (application/json)
 
-        {
-            "availability": true,
-            "rest_char": 4,
-            "gacha_cost": 1000,
-            "money": 4800
-        }
+
+    + Attribute
+        + availability: true(boolean) - ガチャが実行可能かどうか
+        + rest_char: 4(number) - 残りキャラ数
+        + gacha_cost: 1000(number) - ガチャ実行コスト
+        + money: 4800(number) - 所持金
 
 ### Draw Gacha [POST]
-+ Attributes
-    + a_char_id: 1(number) - キャラのA_id
-    + char_id: 2(number) - キャラid
-    + name: 丑(string) - キャラ名
-    + attack: 25(number) - 攻撃力
-    + endurance: 45(number) - 耐久力
-    + agility: 30(number) - 敏捷性
-    + debuf: 15(number) - 削減能力
-    
 + Response 201 (application/json)
-        
-        char:
-        {
-            "a_char_id": 1,
-            "char_id": 2,
-            "name": "丑",
-            "status": {
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
-            }
-        }
+
+
+    + Attribute
+        + char_id: 2(number) - キャラid
+        + name: 丑(string) - キャラ名
+        + status: _(object) - ステータス
+            + attack: 25(number) - 攻撃力
+            + endurance: 45(number) - 耐久力
+            + agility: 30(number) - 敏捷性
+            + debuf: 15(number) - 削減能力
 
 # Group Menu
 ## Menu [/v1/menu/]
 
 ### Get Status [GET]
-+ Attributes
-    + name: ほげ(string) - user name
-    + money: 3000(number) - 所持金
-    + medal: 初心者(string) - 称号
-    + leader_char_id: 2(number) - リーダーキャラのID
-    + quest_count: 16(number)
-    
 + Response 200 (application/json)
 
-        {
-            "name": "ほげ",
-            "money": 3000,
-            "medal": "初心者",
-            "leader_char_id": 2,
-            "quest_count": 16
-        }
 
+    + Attribute
+        + name: ほげ(string) - user name
+        + money: 3000(number) - 所持金
+        + medal: 初心者(string) - 称号
+        + leader_char_id: 2(number) - リーダーキャラのID
+        + quest_count: 16(number)
 
 # Group Order
 ## Order [/v1/order/{type}]
@@ -216,23 +196,19 @@ ID発行済→setbattle→ステータス反映済み→result→戦闘終了済
             }],
         }
 ### Change Order [PUT]
-+ Attributes
-    + slot: 3(number) - 変更するスロット
-    + new_id: 6(number) - 変更後のキャラクター
-
 + Request (application/json)
 
-        {
-            "slot": 3,
-            "new_id": 6
-        }
+
+    + Attribute
+        + slot: 3(number) - 変更するスロット
+        + new_id: 6(number) - 変更後のキャラクター
 
 + Response 201 (application/json)
-        
-        {
-            "slot": 3,
-            "new_id": 6
-        }
+
+
+    + Attribute
+        + slot: 3(number) - 変更するスロット
+        + new_id: 6(number) - 変更後のキャラクター
 
 
 # Group Quest
@@ -240,15 +216,10 @@ ID発行済→setbattle→ステータス反映済み→result→戦闘終了済
 クエストバトル発行API
 quest属性のbattleidを作成する
 ### Join: Quest Battle [POST]
-+ Attributes
-    + battle_id: 1(number) - バトルID
-    
 + Response 201 (application/json)
         
-        {
-            "battle_id": 1
-        }
-
+    + Attribute
+        + battle_id: 1(number) - バトルID
 
 
 # Group Stage
