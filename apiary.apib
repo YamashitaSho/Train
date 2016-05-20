@@ -1,7 +1,6 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-
 # Train
 
 Train APIs
@@ -13,104 +12,38 @@ ID発行済→setbattle→result→ステータス反映
 ## Main [/v1/battle/{battle_id}]
 
 ### SetBattle [PUT]
-+ Attributes
-    + type: quest(string) - quest or stage
-    + friend_position: a(array) - 参戦する自キャラの情報
-        + (object)
-            + exp: 55(number) - 経験値
-            + level: 2(number) - レベル
-            + status: a(object)
-                + endurance: 101(number) - たいりょく
-                + debuf: 101(number) - いあつ
-                + attack: 101(number) - こうげき
-                + agility: 101(number) - すばやさ
-    + enemy_position: _(array) - 参戦する敵キャラの情報
-
 + Response 201 (application/json)
 
-        {
-          "friend_position": [
-            {
-              "exp": 55,
-              "level": 2,
-              "status": {
-                "endurance": 101,
-                "debuf": 101,
-                "attack": 101,
-                "agility": 101
-              },
-              "char_id": 9
-            },
-            {
-              "exp": 55,
-              "level": 2,
-              "status": {
-                "endurance": 101,
-                "debuf": 101,
-                "attack": 101,
-                "agility": 101
-              },
-              "char_id": 7
-            }
-          ],
-          "battle_id": 8,
-          ],
-          "type": "quest"
-        }
+
+    + Attribute
+        + type: quest(string) - quest or stage
+        + friend_position (array) - 参戦する自キャラの情報
+            + (Char)
+        + enemy_position (array) - 参戦する敵キャラの情報
+            + (Char)
 
 
 ### turnoverBattle [GET]
-+ Attributes
-
 + Response 200 (application/json)
+
 
 ## Result [/v1/battle/result/{battle_id}]
 指定されたバトル結果を送信、該当バトルのステータスを終了済みに変更する
 
 ### Result[PUT]
-+ Attributes
-    + is_win: true(boolean) - 勝ち負け(勝-true 負-false)
-    + getitem: クエスト一級(string) - 取得アイテム名
-    + money: 3150(number) - 所持金額(すでに加算されている)
-    + prize: 150(number) - 獲得金額
-    + chars: _(array) - キャラクターのステータス(上昇前)
-    + obtained: _(array) - キャラクターのステータス(上昇後)
-
 + Response 200 (application/json)
 
-        {
-            "is_win": true,
-            "getitem": "クエスト一級",
-            "money": 3150,
-            "prize": 150,
-            "chars":[
-            {
-                "a_char_id": 1,
-                "char_id": 2,
-                "name": "丑",
-                "status": {
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
-                },
-                "level": 4
-            }
-            ],
-            "chars_up"[
-            {
-                "status": {
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
-                },
-                "exp": 64,
-                "level": 1
-            }
-            ]
-        }        
-        
+
+    + Attribute
+        + is_win: true(boolean) - 勝ち負け
+        + get_item (Item)
+        + money: 3150(number) - 所持金額(加算済み)
+        + prize: 150(number) - 獲得金額
+        + chars (array) - キャラクターのステータス(上昇前)
+            + (Char)
+        + obtained (array) - キャラクターのステータス(上昇後)
+            + (Char)
+
 # Group Gacha
 ## Gacha [/v1/gacha/]
 ガチャ画面
@@ -131,11 +64,7 @@ ID発行済→setbattle→result→ステータス反映
     + Attribute
         + char_id: 2(number) - キャラid
         + name: 丑(string) - キャラ名
-        + status: _(object) - ステータス
-            + attack: 25(number) - 攻撃力
-            + endurance: 45(number) - 耐久力
-            + agility: 30(number) - 敏捷性
-            + debuf: 15(number) - 削減能力
+        + status (Status)
 
 # Group Menu
 ## Menu [/v1/menu/]
@@ -154,47 +83,20 @@ ID発行済→setbattle→result→ステータス反映
 # Group Order
 ## Order [/v1/order/{type}]
 ### Get Order [GET]
-+ Attributes
-    + party: _(array) - 現在のパーティキャラ及び装備
-    + chars: _(array) - 所持キャラデータの配列
-    + items: _(array) - 所持アイテムの配列
-    +
 + Response 200 (application/json)
 
-        {
-            "party":{
-                "a_char_id1": 1,
-                "a_char_id2": 2,
-                "a_char_id3": 3,
-                "item_id1": 1,
-                "item_id2": 2,
-                "item_id3": 3
-            },
-            "chars":[
-            {
-                "a_char_id": 1,
-                "char_id": 2,
-                "name": "丑",
-                "is_equipped": true,
-                "status": {
-                    "attack": 25,
-                    "endurance": 45,
-                    "agility": 30,
-                    "debuf": 15
-                }
-            }],
-            "items":[
-            {
-                "item_id": 1,
-                "name": "初心者",
-                "status": {
-                    "attack": 5,
-                    "endurance": 0,
-                    "agility": 0,
-                    "debuf": 0
-                }
-            }],
-        }
+
+    + Attribute
+        + party (array) - 現在のパーティキャラ及び装備
+            + (object)
+                + char_id: 3(number) - キャラID
+                + item_id: 1(number) - アイテムID
+        + chars (array)
+            + (Char)
+        + items (array)
+            + (Item)
+
+
 ### Change Order [PUT]
 + Request (application/json)
 
@@ -217,7 +119,7 @@ ID発行済→setbattle→result→ステータス反映
 quest属性のbattleidを作成する
 ### Join: Quest Battle [POST]
 + Response 201 (application/json)
-        
+
     + Attribute
         + battle_id: 1(number) - バトルID
 
@@ -227,63 +129,54 @@ quest属性のbattleidを作成する
 バトル選択画面
 stage属性のbattleidを作成する
 ### Get BattleList [GET]
-+ Attribute
-    + money: 4800(number) - 所持金
-    + chars - 取得キャラ情報(array)
-    + chars/a_char_id: 1(number) - キャラのA_id
-    + chars/char_id: 2(number) - キャラid
-    + chars/name: 丑(string) - キャラ名
-    + chars/attack: 25(number) - 攻撃力
-    + chars/endurance: 45(number) - 耐久力
-    + chars/agility: 30(number) - 敏捷性
-    + chars/debuf: 15(number) - 削減能力
-    + stages - ステージ情報(配列)
-    + stages/stage_id: 1(number) - ステージID
-    + stages/title: 初級(string) - ステージ名
-    + stages/entry_fee: 100(number) - 参加費
-    + stages/prize: 200(number) - 賞金
-    + stages/item_name: "初級卒業"(string) - 獲得称号
-    + stages/clearcount: 3(number) - クリア回数
-    
 + Response 200(application/json)
 
-        {
-            "money": 4800,
-            "chars": [
-                {
-                    "a_char_id": 1,
-                    "char_id": 2,
-                    "name": "丑",
-                    "status": {
-                        "attack": 25,
-                        "endurance": 45,
-                        "agility": 30,
-                        "debuf": 15
-                    }
-                }
-            ],
-            "stages": [
-                {
-                    "stage_id": 3,
-                    "title": "初級",
-                    "entry_fee": 100,
-                    "prize": 200,
-                    "item_name": "初級者卒業",
-                    "clearcount": 2
-                }
-            ]
-        }
-        
+
+    + Attribute
+        + money: 4800(number) (required)- 所持金
+        + chars (array)
+            + :
+                + char_id: 2(number) - キャラid
+                + name: 丑(string) - キャラ名
+                + status (Status)
+
+        + stages - ステージ情報
+            + stage_id: 1(number) - ステージID
+            + title: 初級(string) - ステージ名
+            + entry_fee: 100(number) - 参加費
+            + prize: 200(number) - 賞金
+            + item_name: 初級卒業(string) - 獲得称号
+            + clearcount: 3(number) - クリア回数
+
 ### Join Arena Battle [POST]
-+ Attribute
-    + battle_id: 2(number) - バトルの識別ID
-    
 + Request (application/json)
-    
+
     + Attribute
         + stage_id: 1(number) - ステージID
 
 + Response 201 (application/json)
-        
+
     + Attribute
         + battle_id: 2(number) - バトルID
+
+
+#Data Structure
+
+## Char
++ char_id: 1(number) - キャラID
++ name: うし(string) - キャラ名
++ level: 4(number) - レベル
++ exp: 50(number) - 経験値
++ status (Status)
+
+## Item
++ item_id: 1(number) - アイテムID
++ name: 初心者(string) - アイテム名
++ text: はじめたて(string) - アイテムの説明
++ status (Status)
+
+## Status
++ attack: 25(number) - 攻撃力
++ endurance: 45(number) - 耐久力
++ agility: 30(number) - 敏捷性
++ debuf: 15(number) - 削減能力
