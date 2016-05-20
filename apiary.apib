@@ -27,6 +27,19 @@ ID発行済→setbattle→result→ステータス反映
 + Response 200 (application/json)
 
 
+    + Attribute (array)
+        + 
+            + enemy_hp: 300(number) - 敵PTのHP
+            + friend_hp: 300(number) - 味方PTのHP
+            + is_last_turn: false(boolean) - 最終ターンか
+            + action (array)
+                + 
+                    + position: friend1(string) - 隊列識別子
+                    + damage: 100(number) - 与えたダメージ
+                    + debuf : 45, 54, 46 - かけたデバフ
+
+
+
 ## Result [/v1/battle/result/{battle_id}]
 指定されたバトル結果を送信、該当バトルのステータスを終了済みに変更する
 
