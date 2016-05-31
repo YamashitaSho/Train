@@ -32,11 +32,23 @@ ID発行済→setbattle→result→ステータス反映
             + enemy_hp: 300(number) - 敵PTのHP
             + friend_hp: 300(number) - 味方PTのHP
             + is_last_turn: false(boolean) - 最終ターンか
+        + 
+            + enemy_hp: 0(number) - 敵PTのHP
+            + friend_hp: 300(number) - 味方PTのHP
+            + is_last_turn: true(boolean) - 最終ターンか
             + action (array)
                 + 
                     + position: friend1(string) - 隊列識別子
-                    + damage: 100(number) - 与えたダメージ
+                    + damage: 98(number) - 与えたダメージ
                     + debuf : 45, 54, 46 - かけたデバフ
+                + 
+                    + position: friend2(string) - 隊列識別子
+                    + damage: 112(number) - 与えたダメージ
+                    + debuf : 52, 45, 50 - かけたデバフ
+                + 
+                    + position: friend3(string) - 隊列識別子
+                    + damage: 104(number) - 与えたダメージ
+                    + debuf : 49, 55, 48 - かけたデバフ
 
 
 
@@ -130,8 +142,18 @@ ID発行済→setbattle→result→ステータス反映
 ## Quest [/v1/quest/]
 クエストバトル発行API
 quest属性のbattleidを作成する
+
+### Get MyParty [GET]
++ Response 200 (application/json)
+
+
+    + Attribute
+        + chars (array)
+            + (Char)
+
 ### Join: Quest Battle [POST]
 + Response 201 (application/json)
+
 
     + Attribute
         + battle_id: 1(number) - バトルID
@@ -142,7 +164,7 @@ quest属性のbattleidを作成する
 バトル選択画面
 stage属性のbattleidを作成する
 ### Get BattleList [GET]
-+ Response 200(application/json)
++ Response 200 (application/json)
 
 
     + Attribute
@@ -164,10 +186,12 @@ stage属性のbattleidを作成する
 ### Join Arena Battle [POST]
 + Request (application/json)
 
+
     + Attribute
         + stage_id: 1(number) - ステージID
 
 + Response 201 (application/json)
+
 
     + Attribute
         + battle_id: 2(number) - バトルID
